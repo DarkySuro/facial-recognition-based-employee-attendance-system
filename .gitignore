@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# uv / virtual environment
+.venv/
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# AI / ML
+models/
+*.onnx
+*.pt
+*.pth
+*.h5
+*.keras
+
+# Face / biometric data
+data/
+embeddings/
+face_data/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Temporary files
+*.tmp
+*.temp

@@ -1,0 +1,24 @@
+[project]
+name = "face-attendance-system"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11, <3.13"
+dependencies = [
+    "alembic>=1.19.1",
+    "fastapi>=0.141.1",
+    "insightface>=1.0.1",
+    "numpy>=2.4.6",
+    "opencv-python>=5.0.0.93",
+    "pydantic-settings>=2.15.0",
+    "pymysql>=1.2.0",
+    "python-dotenv>=1.2.3",
+    "sqlalchemy>=2.0.52",
+    "uvicorn>=0.52.4",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+]
