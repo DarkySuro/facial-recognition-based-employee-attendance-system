@@ -28,4 +28,11 @@ class FaceEngine:
       dtype=np.float32,
     )
 
-    return embedding
+    norm = np.linalg.norm(embedding)
+
+    if norm == 0:
+        raise ValueError(
+            "Face embedding has zero magnitude."
+        )
+
+    return embedding / norm
