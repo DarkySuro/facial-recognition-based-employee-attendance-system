@@ -20,19 +20,23 @@ class FaceEngine:
   def detect(self, frame: np.ndarray):
     return self.model.get(frame)
 
-  def get_embedding(self, face) -> np.ndarray:
-    embedding = face.embedding
-
+  @staticmethod
+  def normalize_embedding(embedding: np.ndarray) -> np.ndarray: 
     embedding = np.asarray(
       embedding,
-      dtype=np.float32,
+      dtype=np.float32
     )
 
     norm = np.linalg.norm(embedding)
-
+    
     if norm == 0:
-        raise ValueError(
-            "Face embedding has zero magnitude."
-        )
-
+      raise ValueError(
+        "Face embedding has zero magnitude."
+    )
+    
     return embedding / norm
+
+  def get_embedding(self, face) -> np.ndarray:
+    return self.normalize_embedding(face.embedding)
+
+    

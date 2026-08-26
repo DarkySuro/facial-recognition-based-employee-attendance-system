@@ -23,16 +23,27 @@ def main():
     success, frame = camera.read()
 
     if not success:
+      print("Could not read camera frame.")
       break
 
     faces = engine.detect(frame)
 
-    for face in faces:
-      embedding = engine.get_embedding(face)
+    if len(faces) > 0:
+      face = faces[0]
 
-      print("Embedding shape:", embedding.shape)
-      print("Embedding dtype:", embedding.dtype)
-      print("Embedding norm:", np.linalg.norm(embedding))
+      raw_embedding = np.asarray(
+        face.embedding,
+        dtype=np.float32
+      )
+
+      normalized_embedding = engine.get_embedding(face)
+
+      print("Raw Embedding shape:", raw_embedding.shape)
+      print("Raw Embedding dtype:", raw_embedding.dtype)
+      print("Raw Embedding norm:", np.linalg.norm(raw_embedding))
+      print("Normalized embedding shape:", normalized_embedding.shape)
+      print("Normalized embedding dtype:", normalized_embedding.dtype)
+      print("Normalized embedding norm:", np.linalg.norm(normalized_embedding))
 
       camera.release()
       cv2.destroyAllWindows()
