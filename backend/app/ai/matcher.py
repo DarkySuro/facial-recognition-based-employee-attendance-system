@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from backend.app.ai.similarity import cosine_similarity
+from backend.app.core.config import settings
 
 @dataclass
 class MatchResult:
@@ -12,9 +13,9 @@ class MatchResult:
 class FaceMatcher:
   def __init__(
     self,
-    threshold: float = 0.45,
+    threshold: float,
   ):
-    self.threshold = threshold
+    self.threshold = settings.face_recognition_threshold
 
   def compare(
     self,
