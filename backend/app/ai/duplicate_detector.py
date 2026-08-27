@@ -56,7 +56,9 @@ class DuplicateDetector:
           )
 
     is_duplicate = (
-      highest_similarity >= self.threshold
+      matched_employee_id is not None 
+      and highest_similarity 
+      >= self.threshold
     )
 
     if not is_duplicate:
