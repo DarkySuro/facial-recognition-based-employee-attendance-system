@@ -7,6 +7,10 @@ from backend.app.services.recognition_service import (
     RecognitionService,
 )
 
+from backend.app.ai.recognition_stabilizer import (
+    RecognitionStabilizer,
+)
+
 
 def main():
 
@@ -19,6 +23,11 @@ def main():
     recognition_service = RecognitionService(
         session=session,
         recognition_threshold=0.70,
+    )
+
+    stabilizer = RecognitionStabilizer(
+        required_matches=3,
+        history_size=5
     )
 
     camera = cv2.VideoCapture(
@@ -78,14 +87,26 @@ def main():
 
                 result = (
                     recognition_service.recognize(
-                        face.embedding
+                        embedding
                     )
                 )
 
-                if result.recognized:
+                stable_result = stabilizer.update(
+                        employee_id=result.employee_id,
+                        similarity=result.similarity,
+                    )
+
+                if stable_result.confirmed:
+                    label = (
+                        f"CONFIRMED Employee "
+                        f"{stable_result.employee_id} "
+                        f"{stable_result.similarity:.2f}"
+                    )
+
+                elif result.recognized:
 
                     label = (
-                        f"Employee "
+                        f"Candidate Employee "
                         f"{result.employee_id} "
                         f""
                         f"{result.similarity:.2f}"
