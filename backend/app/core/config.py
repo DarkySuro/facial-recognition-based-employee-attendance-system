@@ -5,7 +5,7 @@ from urllib.parse import quote_plus
 
 class Settings(BaseSettings):
     app_name: str = Field(
-        default="Face Attendance System",
+        default="Facial Recognition Based Attendance System",
         validation_alias="APP_NAME",
     )
 
