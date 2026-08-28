@@ -1,3 +1,5 @@
+from datetime import date
+
 import cv2
 import numpy as np
 
@@ -15,6 +17,9 @@ from backend.app.ai.face_tracker import (
 from backend.app.ai.recognition_stabilizer import (
     RecognitionStabilizer,
 )
+from backend.app.services.attendance_service import (
+    AttendanceService
+)
 
 
 def main():
@@ -28,6 +33,10 @@ def main():
     recognition_service = RecognitionService(
         session=session,
         recognition_threshold=0.70,
+    )
+
+    attendance_service = AttendanceService(
+        session
     )
 
     tracker = FaceTracker(
@@ -57,9 +66,19 @@ def main():
     print("Look at the camera.")
     print("Press Q to exit.")
 
+    attendance_processed_tracks = set()
+    attendance_processing_date = date.today()
+
     try:
 
         while True:
+
+            current_date = date.today()
+
+            if current_date != attendance_processing_date:
+
+                attendance_processed_tracks.clear()
+                attendance_processing_date = current_date
 
             success, frame = camera.read()
 
@@ -77,6 +96,14 @@ def main():
 
             tracked_faces = tracker.update(
                 faces
+            )
+
+            visible_track_ids = (
+                track_id for track_id, _ in tracked_faces
+            )
+
+            attendance_processed_tracks.intersection_update(
+                visible_track_ids
             )
 
             active_track_ids = {
@@ -127,7 +154,56 @@ def main():
                         similarity=result.similarity,
                     )
 
+                attendance_result = None
+
+                if (
+                    stable_result.confirmed
+                    and track_id
+                    not in attendance_processed_tracks
+                ):
+                    attendance_result = (
+                        attendance_service.mark_attendance(
+                            employee_id=(
+                                stable_result.employee_id
+                            ),
+                            recognition_confidence=(
+                                stable_result.similarity
+                            )
+                        )
+                    )
+
+                    attendance_processed_tracks.add(
+                        track_id
+                    )
+
                 if stable_result.confirmed:
+
+                    if attendance_result is not None:
+
+                        if attendance_result.attendance_marked:
+
+                            attendance_status = (
+                                "ATTENDANCE MARKED"
+                            )
+
+                        elif attendance_result.already_marked:
+
+                            attendance_status = (
+                                "ALREADY MARKED"
+                            )
+
+                        else:
+
+                            attendance_status = (
+                                "PROCESSED"
+                            )
+
+                    else:
+
+                        attendance_status = (
+                            "CONFIRMED"
+                        )
+
                     label = (
                         f"Track {track_id} | "
                         f"Employee {stable_result.employee_id} | "
