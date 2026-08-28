@@ -115,11 +115,28 @@ class FaceEnrollmentService:
         dtype=np.float32
       )
 
-      if embedding.shape != EMBEDDING_DIMENSION:
+      # if embedding.ndim != 1:
+      #   raise ValueError(
+      #       f"Embedding must be 1-dimensional. "
+      #       f"Received shape: {embedding.shape}"
+      #   )
+
+      if embedding.shape != (
+        EMBEDDING_DIMENSION,
+      ):
         raise ValueError(
           f"Invalid embedding shape: "
-          f"{embedding.shape}"
+          f"Expected {EMBEDDING_DIMENSION}, "
+          f"{embedding.shape[0]}"
         )
+
+
+      print(
+        "DEBUG:",
+        "shape =", embedding.shape,
+        "dimension =", EMBEDDING_DIMENSION,
+        "type =", type(EMBEDDING_DIMENSION),
+      )
 
     # ------------------------------------------
     # 3. Validate enrollment consistency
@@ -149,7 +166,7 @@ class FaceEnrollmentService:
 
     duplicate = (
       self.duplicate_detector.check(
-        embeddings=embeddings,
+        new_embeddings=embeddings,
         existing_embeddings=existing_embeddings
       )
     )
@@ -177,7 +194,7 @@ class FaceEnrollmentService:
           )
         )
   
-        self.repository.create(
+        self.embedding_repository.create(
           employee_id=employee_id,
           embedding=embedding_bytes,
           model_name=model_name,

@@ -38,7 +38,8 @@ def main():
     import cv2
 
     camera = cv2.VideoCapture(
-        MOBILE_CAMERA,
+        # MOBILE_CAMERA,
+        0,
         cv2.CAP_DSHOW,
     )
 
@@ -71,7 +72,7 @@ def main():
             )
             break
         
-        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+        # frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 
         faces = face_engine.detect(frame)
 
