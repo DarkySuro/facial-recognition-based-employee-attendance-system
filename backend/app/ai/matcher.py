@@ -13,9 +13,9 @@ class MatchResult:
 class FaceMatcher:
   def __init__(
     self,
-    threshold: float,
+    threshold: float = settings.face_recognition_threshold,
   ):
-    self.threshold = settings.face_recognition_threshold
+    self.threshold = threshold
 
   def compare(
     self,
