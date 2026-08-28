@@ -15,6 +15,7 @@ class AttendanceResult:
     already_marked: bool
     attendance_id: int | None
     check_in_time: datetime | None
+    event: str
 
 
 class AttendanceService:
@@ -65,6 +66,7 @@ class AttendanceService:
                 check_in_time=(
                     existing_attendance.check_in_time
                 ),
+                event="already marked"
             )
 
         # ----------------------------------------
@@ -104,4 +106,5 @@ class AttendanceService:
             check_in_time=(
                 attendance.check_in_time
             ),
+            event="marked"
         )
