@@ -22,6 +22,53 @@ class RecognitionLogService:
             )
         )
 
+    def get_log(
+        self,
+        log_id: int,
+    ):
+
+        recognition_log = (
+            self.repository.get_by_id(
+                log_id
+            )
+        )
+
+        if recognition_log is None:
+
+            raise ValueError(
+                f"Recognition log {log_id} "
+                "not found."
+            )
+
+        return recognition_log
+
+
+    def get_all_logs(
+        self,
+    ):
+
+        return self.repository.get_all()
+
+
+    def get_employee_logs(
+        self,
+        employee_id: int,
+    ):
+
+        return self.repository.get_by_employee_id(
+            employee_id
+        )
+
+
+    def get_camera_logs(
+        self,
+        camera_id: int,
+    ):
+
+        return self.repository.get_by_camera_id(
+            camera_id
+        )
+
     def log(
         self,
         employee_id: int | None,

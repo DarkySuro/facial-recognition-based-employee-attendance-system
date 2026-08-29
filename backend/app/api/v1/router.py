@@ -8,6 +8,9 @@ from backend.app.api.v1.cameras import (
 from backend.app.api.v1.attendance import (
   router as attendance_router
 )
+from backend.app.api.v1.recognition_logs import (
+  router as recognition_log_router
+)
 
 router = APIRouter(
     prefix="/api/v1",
@@ -23,6 +26,10 @@ router.include_router(
 
 router.include_router(
   attendance_router,
+)
+
+router.include_router(
+  recognition_log_router
 )
 
 @router.get("/health")

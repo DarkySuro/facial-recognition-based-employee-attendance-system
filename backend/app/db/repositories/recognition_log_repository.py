@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from backend.app.db.models.recognition_log import (
@@ -14,6 +15,10 @@ class RecognitionLogRepository:
         session: Session,
     ):
         self.session = session
+
+    # ------------------------------------------
+    # Create recognition log
+    # ------------------------------------------
 
     def create(
         self,
@@ -39,3 +44,91 @@ class RecognitionLogRepository:
         )
 
         return recognition_log
+
+    # ------------------------------------------
+    # Get log by ID
+    # ------------------------------------------
+    def get_by_id(
+        self,
+        log_id: int,
+    ) -> RecognitionLog | None:
+
+        statement = select(
+            RecognitionLog
+        ).where(
+            RecognitionLog.id == log_id
+        )
+
+        return self.session.scalar(
+            statement
+        )
+
+    # ------------------------------------------
+    # Get all logs
+    # ------------------------------------------
+    def get_all(
+        self,
+    ) -> list[RecognitionLog]:
+
+        statement = (
+            select(RecognitionLog)
+            .order_by(
+                RecognitionLog.timestamp.desc()
+            )
+        )
+
+        return list(
+            self.session.scalars(
+                statement
+            )
+        )
+
+    # ------------------------------------------
+    # Get logs by employee
+    # ------------------------------------------
+    def get_by_employee_id(
+        self,
+        employee_id: int,
+    ) -> list[RecognitionLog]:
+
+        statement = (
+            select(RecognitionLog)
+            .where(
+                RecognitionLog.employee_id
+                == employee_id
+            )
+            .order_by(
+                RecognitionLog.timestamp.desc()
+            )
+        )
+
+        return list(
+            self.session.scalars(
+                statement
+            )
+        )
+
+    # ------------------------------------------
+    # Get logs by camera
+    # ------------------------------------------
+    def get_by_camera_id(
+        self,
+        camera_id: int,
+    ) -> list[RecognitionLog]:
+
+        statement = (
+            select(RecognitionLog)
+            .where(
+                RecognitionLog.camera_id
+                == camera_id
+            )
+            .order_by(
+                RecognitionLog.timestamp.desc()
+            )
+        )
+
+        return list(
+            self.session.scalars(
+                statement
+            )
+        )
