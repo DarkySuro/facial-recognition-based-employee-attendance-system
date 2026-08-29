@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 
 from sqlalchemy.orm import Session
 
@@ -149,4 +149,44 @@ class AttendanceService:
                 attendance.check_in_time
             ),
             event="marked"
+        )
+
+    def get_attendance_by_date_range(
+        self,
+        start_date: date,
+        end_date: date,
+    ):
+
+        if start_date > end_date:
+            raise ValueError(
+                "Start date cannot be after end date."
+            )
+
+        return (
+            self.attendance_repository
+            .get_by_date_range(
+                start_date=start_date,
+                end_date=end_date,
+            )
+        )
+
+    def get_employee_attendance_by_date_range(
+        self,
+        employee_id: int,
+        start_date: date,
+        end_date: date,
+    ):
+
+        if start_date > end_date:
+            raise ValueError(
+                "Start date cannot be after end date."
+            )
+
+        return (
+            self.attendance_repository
+            .get_by_employee_and_date_range(
+                employee_id=employee_id,
+                start_date=start_date,
+                end_date=end_date,
+            )
         )

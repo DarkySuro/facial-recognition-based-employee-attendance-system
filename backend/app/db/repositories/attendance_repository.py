@@ -131,3 +131,64 @@ class AttendanceRepository:
         self.session.add(attendance)
 
         return attendance
+
+    # ----------------------------------------
+    # Get attendance by date
+    # ----------------------------------------
+    def get_by_date_range(
+        self,
+        start_date: date,
+        end_date: date,
+    ) -> list[Attendance]:
+
+        statement = (
+            select(Attendance)
+            .where(
+                Attendance.attendance_date
+                >= start_date,
+                Attendance.attendance_date
+                <= end_date,
+            )
+            .order_by(
+                Attendance.attendance_date.desc(),
+                Attendance.check_in_time.desc(),
+            )
+        )
+
+        return list(
+            self.session.scalars(
+                statement
+            )
+        )
+
+    # ----------------------------------------
+    # Get attendance of an employee by date
+    # ----------------------------------------
+    def get_by_employee_and_date_range(
+        self,
+        employee_id: int,
+        start_date: date,
+        end_date: date,
+    ) -> list[Attendance]:
+
+        statement = (
+            select(Attendance)
+            .where(
+                Attendance.employee_id
+                == employee_id,
+                Attendance.attendance_date
+                >= start_date,
+                Attendance.attendance_date
+                <= end_date,
+            )
+            .order_by(
+                Attendance.attendance_date.desc(),
+                Attendance.check_in_time.desc(),
+            )
+        )
+
+        return list(
+            self.session.scalars(
+                statement
+            )
+        )

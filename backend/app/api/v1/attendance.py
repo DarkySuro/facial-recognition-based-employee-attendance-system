@@ -1,3 +1,4 @@
+from datetime import date
 from fastapi import (
     APIRouter,
     Depends,
@@ -32,6 +33,8 @@ router = APIRouter(
     response_model=list[AttendanceResponse],
 )
 def get_all_attendance(
+    start_date: date | None = None,
+    end_date: date | None = None,
     db: Session = Depends(get_db),
 ):
 
@@ -39,7 +42,35 @@ def get_all_attendance(
         db
     )
 
-    return service.get_all_attendance()
+    if (
+        start_date is None
+        and end_date is None
+    ):
+        return service.get_all_attendance()
+
+    if (
+        start_date is None
+        or end_date is None
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "Both start_date and end_date "
+                "must be provided together."
+            )
+        )
+    try:
+        return (
+            service.get_attendance_by_date_range(
+                start_date=start_date,
+                end_date=end_date,
+            )
+        )
+    except ValueError as error:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(error)
+        )
 
 
 # ------------------------------------------
@@ -55,6 +86,8 @@ def get_all_attendance(
 )
 def get_employee_attendance(
     employee_id: int,
+    start_date: date | None,
+    end_date: date | None,
     db: Session = Depends(get_db),
 ):
 
@@ -62,10 +95,44 @@ def get_employee_attendance(
         db
     )
 
-    return service.get_employee_attendance(
-        employee_id
-    )
+    if (
+        start_date is None
+        and end_date is None
+    ):
+        return service.get_employee_attendance(
+            employee_id
+        )
+    
+    if (
+        start_date is None
+        or end_date is None
+    ):
 
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "Both start_date and end_date "
+                "must be provided together."
+            ),
+        )
+
+    try:
+
+        return (
+            service
+            .get_employee_attendance_by_date_range(
+                employee_id=employee_id,
+                start_date=start_date,
+                end_date=end_date,
+            )
+        )
+
+    except ValueError as error:
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(error),
+        )
 
 # ------------------------------------------
 # Get attendance by ID
