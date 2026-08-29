@@ -5,6 +5,9 @@ from backend.app.api.v1.employees import (
 from backend.app.api.v1.cameras import (
   router as camera_router
 )
+from backend.app.api.v1.attendance import (
+  router as attendance_router
+)
 
 router = APIRouter(
     prefix="/api/v1",
@@ -16,6 +19,10 @@ router.include_router(
 
 router.include_router(
   camera_router,
+)
+
+router.include_router(
+  attendance_router,
 )
 
 @router.get("/health")

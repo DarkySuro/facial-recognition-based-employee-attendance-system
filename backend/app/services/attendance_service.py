@@ -32,6 +32,48 @@ class AttendanceService:
             )
         )
 
+    def get_attendance(
+        self,
+        attendance_id: int,
+    ):
+
+        attendance = (
+            self.attendance_repository.get_by_id(
+                attendance_id
+            )
+        )
+
+        if attendance is None:
+
+            raise ValueError(
+                f"Attendance record {attendance_id} "
+                "not found."
+            )
+
+        return attendance
+
+
+    def get_all_attendance(
+        self,
+    ):
+
+        return (
+            self.attendance_repository.get_all()
+        )
+
+
+    def get_employee_attendance(
+        self,
+        employee_id: int,
+    ):
+
+        return (
+            self.attendance_repository
+            .get_by_employee_id(
+                employee_id
+            )
+        )
+
     def mark_attendance(
         self,
         employee_id: int,
