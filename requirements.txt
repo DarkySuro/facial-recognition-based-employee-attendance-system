@@ -8,3 +8,4 @@ pydantic-settings
 numpy
 opencv-python
 insightface
+"pydantic[email]"
