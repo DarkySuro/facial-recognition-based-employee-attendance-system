@@ -109,34 +109,36 @@ class FaceEnrollmentService:
         "No face embeddings provided!"
       )
 
+    validated_embeddings = []
+
     for embedding in embeddings:
       embedding = np.asarray(
         embedding,
         dtype=np.float32
       )
 
-      # if embedding.ndim != 1:
-      #   raise ValueError(
-      #       f"Embedding must be 1-dimensional. "
-      #       f"Received shape: {embedding.shape}"
-      #   )
-
+      if embedding.ndim != 1:
+        raise ValueError(
+            f"Embedding must be 1-dimensional. "
+            f"Received shape: {embedding.shape}"
+        )
+   
       if embedding.shape != (
         EMBEDDING_DIMENSION,
       ):
         raise ValueError(
           f"Invalid embedding shape: "
-          f"Expected {EMBEDDING_DIMENSION}, "
-          f"{embedding.shape[0]}"
+          f"Expected ({EMBEDDING_DIMENSION},), "
+          f"got {embedding.shape}"
         )
 
-
-      print(
-        "DEBUG:",
-        "shape =", embedding.shape,
-        "dimension =", EMBEDDING_DIMENSION,
-        "type =", type(EMBEDDING_DIMENSION),
-      )
+      validated_embeddings.append(embedding)
+      # print(
+      #   "DEBUG:",
+      #   "shape =", embedding.shape,
+      #   "dimension =", EMBEDDING_DIMENSION,
+      #   "type =", type(EMBEDDING_DIMENSION),
+      # )
 
     # ------------------------------------------
     # 3. Validate enrollment consistency
@@ -144,7 +146,7 @@ class FaceEnrollmentService:
 
     validation = (
       self.validator.validate(
-          embeddings
+          validated_embeddings
       )
     )
 
@@ -166,7 +168,7 @@ class FaceEnrollmentService:
 
     duplicate = (
       self.duplicate_detector.check(
-        new_embeddings=embeddings,
+        new_embeddings=validated_embeddings,
         existing_embeddings=existing_embeddings
       )
     )
@@ -186,7 +188,7 @@ class FaceEnrollmentService:
     # -------------------------------------------
 
     try:
-      for embedding in embeddings:
+      for embedding in validated_embeddings:
       
         embedding_bytes = (
           serialize_embedding(
@@ -239,4 +241,3 @@ class FaceEnrollmentService:
     self.session.execute(
       statement
     )
-  

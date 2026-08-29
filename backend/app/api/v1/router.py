@@ -11,6 +11,9 @@ from backend.app.api.v1.attendance import (
 from backend.app.api.v1.recognition_logs import (
   router as recognition_log_router
 )
+from backend.app.api.v1.face_enrollment import (
+  router as face_enrollment_router,
+)
 
 router = APIRouter(
     prefix="/api/v1",
@@ -30,6 +33,10 @@ router.include_router(
 
 router.include_router(
   recognition_log_router
+)
+
+router.include_router(
+  face_enrollment_router
 )
 
 @router.get("/health")
