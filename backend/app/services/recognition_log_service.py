@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from sqlalchemy.orm import Session
 
@@ -96,3 +96,30 @@ class RecognitionLogService:
         except Exception:
             self.session.rollback()
             raise
+
+    def get_filtered_logs(
+        self,
+        employee_id: int | None = None,
+        camera_id: int | None = None,
+        recognized: bool | None = None,
+        start_date: date | None = None,
+        end_date: date | None = None,
+    ):
+
+        if (
+            start_date is not None
+            and end_date is not None
+            and start_date > end_date
+        ):
+
+            raise ValueError(
+                "Start date cannot be after end date."
+            )
+
+        return self.repository.get_filtered(
+            employee_id=employee_id,
+            camera_id=camera_id,
+            recognized=recognized,
+            start_date=start_date,
+            end_date=end_date,
+        )

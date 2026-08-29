@@ -1,3 +1,4 @@
+from datetime import date
 from fastapi import (
     APIRouter,
     Depends,
@@ -31,7 +32,16 @@ router = APIRouter(
     "",
     response_model=list[RecognitionLogResponse],
 )
+@router.get(
+    "",
+    response_model=list[RecognitionLogResponse],
+)
 def get_all_logs(
+    employee_id: int | None = None,
+    camera_id: int | None = None,
+    recognized: bool | None = None,
+    start_date: date | None = None,
+    end_date: date | None = None,
     db: Session = Depends(get_db),
 ):
 
@@ -39,7 +49,52 @@ def get_all_logs(
         db
     )
 
-    return service.get_all_logs()
+    try:
+
+        if (
+            employee_id is None
+            and camera_id is None
+            and recognized is None
+            and start_date is None
+            and end_date is None
+        ):
+
+            return service.get_all_logs()
+
+        if (
+            start_date is None
+            and end_date is not None
+        ):
+
+            raise ValueError(
+                "start_date is required "
+                "when end_date is provided."
+            )
+
+        if (
+            start_date is not None
+            and end_date is None
+        ):
+
+            raise ValueError(
+                "end_date is required "
+                "when start_date is provided."
+            )
+
+        return service.get_filtered_logs(
+            employee_id=employee_id,
+            camera_id=camera_id,
+            recognized=recognized,
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+    except ValueError as error:
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(error),
+        )
 
 
 # ------------------------------------------

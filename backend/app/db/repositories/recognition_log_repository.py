@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -125,6 +125,70 @@ class RecognitionLogRepository:
             .order_by(
                 RecognitionLog.timestamp.desc()
             )
+        )
+
+        return list(
+            self.session.scalars(
+                statement
+            )
+        )
+
+    def get_filtered(
+        self,
+        employee_id: int | None = None,
+        camera_id: int | None = None,
+        recognized: bool | None = None,
+        start_date: date | None = None,
+        end_date: date | None = None,
+    ) -> list[RecognitionLog]:
+
+        statement = select(
+            RecognitionLog
+        )
+
+        if employee_id is not None:
+
+            statement = statement.where(
+                RecognitionLog.employee_id
+                == employee_id
+            )
+
+        if camera_id is not None:
+
+            statement = statement.where(
+                RecognitionLog.camera_id
+                == camera_id
+            )
+
+        if recognized is not None:
+
+            statement = statement.where(
+                RecognitionLog.recognized
+                == recognized
+            )
+
+        if start_date is not None:
+
+            statement = statement.where(
+                RecognitionLog.timestamp
+                >= datetime.combine(
+                    start_date,
+                    datetime.min.time(),
+                )
+            )
+
+        if end_date is not None:
+
+            statement = statement.where(
+                RecognitionLog.timestamp
+                < datetime.combine(
+                    end_date,
+                    datetime.max.time(),
+                )
+            )
+
+        statement = statement.order_by(
+            RecognitionLog.timestamp.desc()
         )
 
         return list(
