@@ -38,5 +38,3 @@ class FaceEngine:
 
   def get_embedding(self, face) -> np.ndarray:
     return self.normalize_embedding(face.embedding)
-
-    

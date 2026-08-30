@@ -9,3 +9,4 @@ numpy
 opencv-python
 insightface
 "pydantic[email]"
+python-multipart
