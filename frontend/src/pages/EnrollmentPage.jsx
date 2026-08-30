@@ -40,7 +40,9 @@ function EnrollmentPage() {
     }
 
     if (files.length < 5) {
-      setError("Please select at least 5 face images.");
+      setError(
+        `Please select at least 5 face images. ${files.length}/5`
+      );
       return;
     }
 
@@ -56,10 +58,11 @@ function EnrollmentPage() {
       );
 
       setFiles([]);
-      event.target.reset();
+      // event.target.reset();
     } catch (err) {
       console.error("Face enrollment failed:", err);
       console.error("Response data:", err.response?.data);
+
       console.error(
         "Validation detail:",
         JSON.stringify(err.response?.data?.detail, null, 2),
@@ -81,6 +84,9 @@ function EnrollmentPage() {
           responseData?.detail || "Face enrollment failed. Please try again.",
         );
       }
+    } finally {
+      console.log("Finally reached");
+      setLoading(false);
     }
   };
 
@@ -213,9 +219,7 @@ function EnrollmentPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-slate-800 text-white py-3 rounded-lg font-medium
-                       hover:bg-slate-700 disabled:opacity-50
-                       disabled:cursor-not-allowed"
+            className="w-full bg-slate-800 text-white py-3 rounded-lg font-medium hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Processing..." : "Enroll Face"}
           </button>
