@@ -5,3 +5,8 @@ export const getEmployees = async () => {
 
   return response.data;
 };
+
+export const getEmployee = async (employeeId) => {
+  const response = await api.get(`/employees/${employeeId}`);
+  return response.data;
+};
