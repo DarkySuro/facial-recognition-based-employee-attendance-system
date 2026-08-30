@@ -1,12 +1,9 @@
-{/* <div className="bg-red-500 text-white text-3xl font-bold p-10 rounded-xl">
-  Tailwind Test
-</div>; */}
 import { useEffect, useState } from "react";
 
 import StatCard from "../components/StatCard";
 
 import { getEmployees } from "../services/employeeService";
-import { getAttendance } from "../services/attendanceService";
+import { getAllAttendance } from "../services/attendanceService";
 import { getRecognitionLogs } from "../services/recognitionLogService";
 
 function DashboardPage() {
@@ -26,7 +23,7 @@ function DashboardPage() {
         const [employeesData, attendanceData, recognitionLogsData] =
           await Promise.all([
             getEmployees(),
-            getAttendance(),
+            getAllAttendance(),
             getRecognitionLogs(),
           ]);
 
