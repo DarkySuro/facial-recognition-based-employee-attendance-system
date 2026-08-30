@@ -4,7 +4,7 @@ import StatCard from "../components/StatCard";
 
 import { getEmployees } from "../services/employeeService";
 import { getAllAttendance } from "../services/attendanceService";
-import { getRecognitionLogs } from "../services/recognitionLogService";
+import { getAllRecognitionLogs } from "../services/recognitionLogService";
 
 function DashboardPage() {
   const [employees, setEmployees] = useState([]);
@@ -24,7 +24,7 @@ function DashboardPage() {
           await Promise.all([
             getEmployees(),
             getAllAttendance(),
-            getRecognitionLogs(),
+            getAllRecognitionLogs(),
           ]);
 
         setEmployees(employeesData);
