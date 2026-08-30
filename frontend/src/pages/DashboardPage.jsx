@@ -5,6 +5,7 @@ import StatCard from "../components/StatCard";
 import { getEmployees } from "../services/employeeService";
 import { getAllAttendance } from "../services/attendanceService";
 import { getAllRecognitionLogs } from "../services/recognitionLogService";
+import { getLocalDateString } from "../helpers/localDate";
 
 function DashboardPage() {
   const [employees, setEmployees] = useState([]);
@@ -40,15 +41,34 @@ function DashboardPage() {
     };
 
     loadDashboard();
-  }, []);
 
+    const interval = setInterval(loadDashboard, 50000);
+
+    return () => clearInterval(interval);
+  }, []);
+  
   const activeEmployees = employees.filter((employee) => employee.is_active);
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = getLocalDateString();
+
+  console.log("Local today:", today);
+  console.log("Attendance data:", attendance);
+
+  attendance.forEach((record) => {
+    console.log({
+      id: record.id,
+      attendance_date: record.attendance_date,
+      type: typeof record.attendance_date,
+      matches: record.attendance_date === today,
+    });
+  });
+
 
   const todayAttendance = attendance.filter(
     (record) => record.attendance_date === today,
   );
+
+  console.log("Today's attendance:", todayAttendance);
 
   if (loading) {
     return (
@@ -107,9 +127,7 @@ function DashboardPage() {
         <StatCard
           title="Total Employees"
           value={employees.length}
-          subtitle={"Registered employee" + (
-            employees.length > 1 ? "s" : ""
-          )}
+          subtitle={"Registered employee" + (employees.length > 1 ? "s" : "")}
           icon="👥"
         />
 
@@ -123,9 +141,9 @@ function DashboardPage() {
         <StatCard
           title="Today's Attendance"
           value={todayAttendance.length}
-          subtitle={"Employee" + (
-            todayAttendance.length > 1 ? "s" : "")
-            + " checked in"}
+          subtitle={
+            "Employee" + (todayAttendance.length > 1 ? "s" : "") + " checked in"
+          }
           icon="📅"
         />
 
