@@ -49,7 +49,8 @@ function DashboardPage() {
   
   const activeEmployees = employees.filter((employee) => employee.is_active);
 
-  const today = getLocalDateString();
+  // const today = getLocalDateString();
+  const today = new Date().toISOString().split("T")[0];
 
   console.log("Local today:", today);
   console.log("Attendance data:", attendance);
@@ -62,7 +63,6 @@ function DashboardPage() {
       matches: record.attendance_date === today,
     });
   });
-
 
   const todayAttendance = attendance.filter(
     (record) => record.attendance_date === today,

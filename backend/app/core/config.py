@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     )
 
     face_recognition_threshold: float = Field(
-        default=0.45,
+        default=0.70,
         validation_alias="FACE_RECOGNITION_THRESHOLD",
     )
 

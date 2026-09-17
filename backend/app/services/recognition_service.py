@@ -1,25 +1,24 @@
 from sqlalchemy.orm import Session
 
-from backend.app.ai.recognition import (
-    FaceRecognizer,
-)
-from backend.app.db.repositories.face_embedding_repository import (
-    FaceEmbeddingRepository,
-)
-
+from backend.app.ai.recognition import FaceRecognizer
+from backend.app.core.config import settings
+from backend.app.db.repositories.face_embedding_repository import FaceEmbeddingRepository
 
 class RecognitionService:
 
     def __init__(
         self,
         session: Session,
-        recognition_threshold: float = 0.70,
+        recognition_threshold: float | None = None,
     ):
 
-        self.embedding_repository = (
-            FaceEmbeddingRepository(
-                session
-            )
+        self.embedding_repository = FaceEmbeddingRepository(    session
+        )
+
+        threshold = (
+            recognition_threshold
+            if recognition_threshold is not None
+            else settings.face_recognition_threshold
         )
 
         self.recognizer = FaceRecognizer(
