@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import EmployeeTable from "../components/EmployeeTable";
 import EmployeeDetails from "../components/EmployeeDetails";
+import AddEmployeeModal from "../components/AddEmployeeModal";
 
 import { getEmployees } from "../services/employeeService";
 
@@ -11,6 +12,8 @@ function EmployeesPage() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [showAddEmployee, setShowAddEmployee] = useState(false);
 
   const loadEmployees = async () => {
     try {
@@ -48,10 +51,16 @@ function EmployeesPage() {
           </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={() => setShowAddEmployee(true)}
+            className="rounded-xl bg-slate-800 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-700"
+          >
+            + Add Employee
+          </button>
+
           <div className="rounded-xl border border-slate-200 bg-white px-5 py-3 shadow-sm">
             <p className="text-xs font-medium text-slate-500">Total</p>
-
             <p className="mt-1 text-xl font-bold text-slate-800">
               {employees.length}
             </p>
@@ -59,7 +68,6 @@ function EmployeesPage() {
 
           <div className="rounded-xl border border-slate-200 bg-white px-5 py-3 shadow-sm">
             <p className="text-xs font-medium text-slate-500">Active</p>
-
             <p className="mt-1 text-xl font-bold text-green-600">
               {activeCount}
             </p>
@@ -107,6 +115,16 @@ function EmployeesPage() {
         employee={selectedEmployee}
         onClose={() => setSelectedEmployee(null)}
       />
+
+      {showAddEmployee && (
+        <AddEmployeeModal
+          onClose={() => setShowAddEmployee(false)}
+          onCreated={(employee) => {
+            setEmployees((current) => [...current, employee]);
+            setSelectedEmployee(employee);
+          }}
+        />
+      )}
     </div>
   );
 }

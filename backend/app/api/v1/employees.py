@@ -63,7 +63,7 @@ def get_employee(
   except ValueError as error:
     raise HTTPException(
       status_code=status.HTTP_404_NOT_FOUND,
-      details=str(error)
+      detail=str(error)
     )
 
 @router.get(
