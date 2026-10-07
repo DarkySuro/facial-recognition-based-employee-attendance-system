@@ -31,7 +31,7 @@ def main():
 
     recognition_service = RecognitionService(
         session=session,
-        recognition_threshold=0.70,
+        # recognition_threshold=0.80,
     )
 
     attendance_service = AttendanceService(

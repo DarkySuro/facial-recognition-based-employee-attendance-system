@@ -12,8 +12,7 @@ class RecognitionService:
         recognition_threshold: float | None = None,
     ):
 
-        self.embedding_repository = FaceEmbeddingRepository(    session
-        )
+        self.embedding_repository = FaceEmbeddingRepository(session)
 
         threshold = (
             recognition_threshold
@@ -22,7 +21,7 @@ class RecognitionService:
         )
 
         self.recognizer = FaceRecognizer(
-            threshold=recognition_threshold
+            threshold=threshold
         )
 
     def recognize(
