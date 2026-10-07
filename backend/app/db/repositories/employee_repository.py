@@ -71,7 +71,7 @@ class EmployeeRepository:
     )
 
     if active_only:
-      statement = select(
+      statement = statement.where(
         Employee.is_active.is_(True)
       )
 
@@ -127,7 +127,7 @@ class EmployeeRepository:
       employee.email = email
 
     if department is not None:
-      employee.designation = department
+      employee.department = department
 
     if designation is not None:
       employee.designation = designation
